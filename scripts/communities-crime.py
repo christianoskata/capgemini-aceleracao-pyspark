@@ -9,7 +9,7 @@ def isNA(df, col):
 				(
 					(F.col(col).isNull()) |
 					(F.col(col) == "?")
-				), 0
+				), None
 			).otherwise(F.col(col))
 		)
 	return df_new
@@ -128,6 +128,31 @@ def pergunta3(df):
 		)
 	df_filtered.orderBy("population", ascending=False).show()
 
+def pergunta4(df):
+
+	df4 = df.select("county", "community", "communityname", 
+                "population", "racepctblack")
+	df_new = isNA(df4, "county")
+	df_new = isNA(df_new, "community")
+	df_new = isNA(df_new, "communityname")
+	df_new = isNA(df_new, "population")
+	df_new = isNA(df_new, "racepctblack")
+
+
+	df_new = typeChange(df_new, "county", "int")
+	df_new = typeChange(df_new, "community", "int")
+	df_new = typeChange(df_new, "population", "float")
+	df_new = typeChange(df_new, "racepctblack", "float")
+
+	df_filtered = df_new.select(
+		"county", "community", "communityname", "population", "racepctblack").where(
+		(F.col("county") > 0) & 
+		(F.col("community") > 0) & 
+		(F.col("population") > 0) & 
+		(F.col("racepctblack") > 0)
+	)
+	df_filtered.orderBy("racepctblack","population", ascending=False).show()
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -140,5 +165,6 @@ if __name__ == "__main__":
 	# print(df.show())
 	# pergunta1(df)
 	# pergunta2(df)
-	pergunta3(df)
+	# pergunta3(df)
+	pergunta4(df)
 
