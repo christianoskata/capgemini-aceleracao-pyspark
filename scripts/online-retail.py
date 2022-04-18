@@ -208,8 +208,8 @@ def pergunta11(df):
 	print("Pergunta 11")
 	(df_final_filtered_total_value
 	.groupBy("InvoiceNo")
-		.sum("Total Valor")
-		.orderBy("sum(Total Valor)", ascending=False)
+		.sum("Total Value")
+		.orderBy("sum(Total Value)", ascending=False)
 		.show())
 
 def pergunta12(df):
@@ -270,8 +270,8 @@ if __name__ == "__main__":
 	# pergunta5(df_treated)
 	# pergunta6(df_treated)
 	# pergunta7(df_treated)
-	# pergunta9(df_treated)
-	# pergunta10(df_treated)
-	# pergunta11(df_treated)
+	pergunta9(df_treated)
+	pergunta10(df_treated)
+	pergunta11(df_treated)
 	pergunta12(df_treated)
-	# pergunta13(df_treated)
+	pergunta13(df_treated)
