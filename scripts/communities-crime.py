@@ -102,6 +102,32 @@ def pergunta2(df):
 		)
 	df_filtered.orderBy("ViolentCrimesPerPop","population", ascending=False).show()
 
+def pergunta3(df):
+
+	df3 = df.select("county", 
+					"community", 
+					"communityname", 
+                	"population")
+
+	df_new = isNA(df3, "county")
+	df_new = isNA(df_new, "community")
+	df_new = isNA(df_new, "communityname")
+	df_new = isNA(df_new, "population")
+
+	df_new = typeChange(df_new, "county", "int")
+	df_new = typeChange(df_new, "community", "int")
+	df_new = typeChange(df_new, "population", "float")
+
+	df_filtered = (df_new.select(
+		"county", "community", "communityname", "population")
+			.where(
+				(F.col("county") > 0) & 
+				(F.col("community") > 0) & 
+				(F.col("population") > 0)
+			)
+		)
+	df_filtered.orderBy("population", ascending=False).show()
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -113,4 +139,6 @@ if __name__ == "__main__":
 		          .load("/home/spark/capgemini-aceleracao-pyspark/data/communities-crime/communities-crime.csv"))
 	# print(df.show())
 	# pergunta1(df)
-	pergunta2(df)
+	# pergunta2(df)
+	pergunta3(df)
+
