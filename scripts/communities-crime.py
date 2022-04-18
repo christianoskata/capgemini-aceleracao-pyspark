@@ -72,6 +72,36 @@ def pergunta1(df):
 
 	df_filtered.orderBy("PolicBudgPerPop", ascending=False).show()
 
+def pergunta2(df):
+
+	df2 = df.select("county", 
+					"community", 
+					"communityname", 
+                	"population", 
+					"ViolentCrimesPerPop")
+
+	df_new = isNA(df2, "county")
+	df_new = isNA(df_new, "community")
+	df_new = isNA(df_new, "communityname")
+	df_new = isNA(df_new, "population")
+	df_new = isNA(df_new, "ViolentCrimesPerPop")
+
+	df_new = typeChange(df_new, "county", "int")
+	df_new = typeChange(df_new, "community", "int")
+	df_new = typeChange(df_new, "population", "float")
+	df_new = typeChange(df_new, "ViolentCrimesPerPop", "float")
+
+	df_filtered = (df_new.select(
+		"county", "community", "communityname", "population", "ViolentCrimesPerPop")
+			.where(
+			(F.col("county") > 0) & 
+			(F.col("community") > 0) & 
+			(F.col("population") > 0) & 
+			(F.col("ViolentCrimesPerPop") > 0)
+			)
+		)
+	df_filtered.orderBy("ViolentCrimesPerPop","population", ascending=False).show()
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -82,4 +112,5 @@ if __name__ == "__main__":
 		          #.schema(schema_communities_crime)
 		          .load("/home/spark/capgemini-aceleracao-pyspark/data/communities-crime/communities-crime.csv"))
 	# print(df.show())
-	pergunta1(df)
+	# pergunta1(df)
+	pergunta2(df)
